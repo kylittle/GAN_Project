@@ -1,5 +1,7 @@
 import os
 import numpy as np
+import datetime
+import sys
 from tqdm import tqdm
 from keras.layers import Input
 from keras.models import Model, Sequential
@@ -10,7 +12,6 @@ from keras.optimizers import Adam
 from keras import initializers
 from mido import MidiFile
 from mido import MidiTrack, Message
-import matplotlib.pyplot as plt
 
 os.environ["KERAS_BACKEND"] = "tensorflow"
 #np.random.seed(10)
@@ -107,47 +108,83 @@ def unscale(x, x_min, x_max):
         unscaled/=-1
     return unscaled
 
+#Bach Training
 def load_midi_data():
-    data = []
-    mid = MidiFile('bach-1.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-2.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-3.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-4.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-5.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-6.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-7.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-8.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-9.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-10.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-11.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-12.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-13.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-14.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-15.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-16.mid')
-    data = make_midi_matrix(mid, data)
-    mid = MidiFile('bach-17.mid')
-    data = make_midi_matrix(mid, data)
+    mode = int(sys.argv[1])
+    print(sys.argv[1])
+    if mode > 1 or mode < 0 and isinstance(mode, int):
+        mode = 0
     
-    data = scale_for_learning(data)
+    if mode == 0:
+        print("Training with various Bach Fugue")
+        data = []
+        mid = MidiFile('./input/bach-1.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-2.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-3.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-4.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-5.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-6.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-7.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-8.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-9.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-10.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-11.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-12.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-13.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-14.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-15.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-16.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bach-17.mid')
+        data = make_midi_matrix(mid, data)
+    
+        data = scale_for_learning(data)
 
-    data = np.array(data)
-    return data
+        data = np.array(data)
+        return data
+
+    else:
+        #Captain Beefheart Training
+        print("Training with Captain Beefheart - Trout Mask Replica")
+        data = []
+        mid = MidiFile('./input/brickbats.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/batmiddle.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/alice.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/bigdummy.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/myhuman.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/peon.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/golden.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/fbl.mid')
+        data = make_midi_matrix(mid, data)
+        mid = MidiFile('./input/veterans.mid')
+        data = make_midi_matrix(mid, data)
+
+        data = scale_for_learning(data)
+
+        data = np.array(data)
+        return data
 
 def get_optimizer():
     return Adam()
@@ -222,7 +259,7 @@ def save_midi_output(epoch, generator, examples=2400):
     mid.tracks.append(track2)
     mid.tracks.append(track3)
     print('The generated track has been saved to output.mid')
-    mid.save('output.mid')
+    mid.save('./output/output' + datetime.datetime.now().isoformat() + '.mid')
 
 def train(epochs=1, batch_size=128):
     x_train = load_midi_data()
