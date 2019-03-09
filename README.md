@@ -23,8 +23,5 @@ Section: Running the Software
 
 Issues/Known Improvements:
 
-1. I want to test the neural network with MIDI files other than Bach to test
-        the ability to learn general purpose MIDI files.
-2. I would like to add a settings.init file or something that allows easy
-        modification of the number of epochs or the frequency of the 
-        outputs.
+1. All Known Improvements have been implemented at this time. I would like to test on more data and find further ways to improve 
+        the algorithm.
