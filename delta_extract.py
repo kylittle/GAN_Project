@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import datetime
-import sys
+import configparser
 from tqdm import tqdm
 from keras.layers import Input
 from keras.models import Model, Sequential
@@ -26,19 +26,24 @@ min_note = -127
 max_note = 127
 min_attack = 0
 max_attack = 100
+epoch_count = 0
+output_frequency = 0
+mode = 0
 
 def main():
     np.set_printoptions(threshold=np.nan, suppress=True)
-    #avg_array = get_averages()
-    #max_array = get_maximums()
-    #avg_array[4] = max_array[4] - avg_array[4]
-    #print(max_array)
-    #print(avg_array)
-    #data = load_midi_data()
-    #print(data)
-    #data = unscale_midi(data)
-    #print(data)
+    read_ini_config()
+    print(output_frequency)
     train(1000, 128)
+
+def read_ini_config():
+    global epoch_count, output_frequency, mode #Let the setting variables be Global
+    config = configparser.ConfigParser()
+    config.read("./config.ini")
+    epoch_count = int(config["DEFAULT"]["EpochCount"])
+    output_frequency = int(config["DEFAULT"]["EpochsBeforeOutput"])
+    mode = int(config["DEFAULT"]["TrainingType"])
+    mode = 0 if mode != 0 and mode != 1 else mode
 
 #Input: MidiFile Object, Output: Ordered Matrix with each part representing a note
 def make_midi_matrix(mid_in, data_out):
@@ -108,14 +113,10 @@ def unscale(x, x_min, x_max):
         unscaled/=-1
     return unscaled
 
-#Bach Training
+
 def load_midi_data():
-    mode = int(sys.argv[1])
-    print(sys.argv[1])
-    if mode > 1 or mode < 0 and isinstance(mode, int):
-        mode = 0
-    
     if mode == 0:
+        #Bach Training
         print("Training with various Bach Fugue")
         data = []
         mid = MidiFile('./input/bach-1.mid')
@@ -158,7 +159,7 @@ def load_midi_data():
         data = np.array(data)
         return data
 
-    else:
+    elif mode == 1: #This is for future modal support
         #Captain Beefheart Training
         print("Training with Captain Beefheart - Trout Mask Replica")
         data = []
@@ -290,7 +291,7 @@ def train(epochs=1, batch_size=128):
             discriminator.trainable = False
             gan.train_on_batch(noise, y_gen)
 
-        if e == 1000 or e % 20 == 0:
+        if e == epoch_count or e % output_frequency == 0:
             #history = gan.fit()
             #plt.plot(history.history['loss'])
             #plt.plot(history.history['val_loss'])
