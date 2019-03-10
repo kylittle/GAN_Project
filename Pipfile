@@ -11,6 +11,7 @@ keras = "*"
 mido = "*"
 tqdm = "*"
 numpy = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.6"
