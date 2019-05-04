@@ -8,6 +8,7 @@ In order to run the code pull the repository to your machine and run:
 2. pip3 install mido
 3. pip3 install tqdm
 4. pip3 install numpy
+5. pip3 install tensorflow
 
 These modules are vital to run the code. 
 
