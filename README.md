@@ -17,10 +17,9 @@ Section: Running the Software
 1. Navigate to the directory that this repository was pulled to.
 2. Issue the command python3 delta-extract.py
 3. The code will start a Tensorflow backend that will begin training.
-4. After each epoch the Network is tested, however it only writes out a midi
-        file every 20 epochs, up to 1000 epochs. It is safe to issue a 
-        sigint to stop the programs execution as the last output.mid will be
-        in the repositories folder.
+4. After each epoch the Network is tested, however it only writes a MIDI 
+        every number of cycles defined in the .ini file. Output will be 
+        written to the output folder included in the project.
 
 Issues/Known Improvements:
 

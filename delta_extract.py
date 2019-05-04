@@ -31,7 +31,7 @@ output_frequency = 0
 mode = 0
 
 def main():
-    np.set_printoptions(threshold=np.nan, suppress=True)
+    #np.set_printoptions(threshold=np.nan, suppress=True)
     read_ini_config()
     print(output_frequency)
     train(1000, 128)
@@ -260,7 +260,7 @@ def save_midi_output(epoch, generator, examples=2400):
     mid.tracks.append(track2)
     mid.tracks.append(track3)
     print('The generated track has been saved to output.mid')
-    mid.save('./output/output' + datetime.datetime.now().isoformat() + '.mid')
+    mid.save('./output/output' + str(epoch) + '.mid')
 
 def train(epochs=1, batch_size=128):
     x_train = load_midi_data()
