@@ -1,4 +1,5 @@
 import os
+import glob
 import numpy as np
 import datetime
 import configparser
@@ -42,8 +43,6 @@ def read_ini_config():
     config.read("./config.ini") #Get configuration file settings
     epoch_count = int(config["DEFAULT"]["EpochCount"]) #Read Settings from the config var
     output_frequency = int(config["DEFAULT"]["EpochsBeforeOutput"])
-    mode = int(config["DEFAULT"]["TrainingType"])
-    mode = 0 if mode != 0 and mode != 1 else mode #Default to bach if mode is not properly set
 
 #Input: MidiFile Object, Output: Ordered Matrix with each part representing a note
 def make_midi_matrix(mid_in, data_out):
@@ -116,75 +115,14 @@ def unscale(x, x_min, x_max):
 
 
 def load_midi_data():
-    if mode == 0:
-        #Bach Training
-        print("Training with various Bach Fugue")
+        print("Training with any .mid file in the INPUT folder")
         data = []
-        mid = MidiFile('./input/bach-1.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-2.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-3.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-4.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-5.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-6.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-7.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-8.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-9.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-10.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-11.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-12.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-13.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-14.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-15.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-16.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bach-17.mid')
-        data = make_midi_matrix(mid, data)
-    
-        data = scale_for_learning(data)
-
-        data = np.array(data)
-        return data
-
-    elif mode == 1: #This is for future modal support
-        #Captain Beefheart Training
-        print("Training with Captain Beefheart - Trout Mask Replica")
-        data = []
-        mid = MidiFile('./input/brickbats.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/batmiddle.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/alice.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/bigdummy.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/myhuman.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/peon.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/golden.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/fbl.mid')
-        data = make_midi_matrix(mid, data)
-        mid = MidiFile('./input/veterans.mid')
-        data = make_midi_matrix(mid, data)
+        for filename in glob.glob('./input/*.mid'):
+            if filename[8] != '.': # Allow commenting of files
+                mid = MidiFile(filename)
+                data = make_midi_matrix(mid, data)
 
         data = scale_for_learning(data)
-
         data = np.array(data)
         return data
 
